@@ -28,10 +28,7 @@ const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
         const data = yield (0, product_service_1.getProductsByCategoryService)(categoryId.toString(), +offset, +page, headers);
         if (!data.message) {
-            res.json({
-                ok: true,
-                data,
-            });
+            res.json(Object.assign({}, data));
         }
         else {
             console.error(data.message);

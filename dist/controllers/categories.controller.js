@@ -18,10 +18,7 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const headers = { Authorization: bearerToken };
         const data = yield (0, categories_service_1.getCategoriesService)(headers);
         if (!data.message) {
-            res.json({
-                ok: true,
-                data,
-            });
+            res.json(Object.assign({}, data));
         }
         else {
             console.error(data.message);

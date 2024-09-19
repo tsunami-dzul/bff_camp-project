@@ -11,10 +11,7 @@ export const getCategories = async (req: Request, res: Response) => {
     const data = await getCategoriesService(headers);
 
     if (!data.message) {
-      res.json({
-        ok: true,
-        data,
-      });
+      res.json({ ...data });
     } else {
       console.error(data.message);
 

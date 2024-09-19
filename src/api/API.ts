@@ -3,7 +3,7 @@ import { IHeader } from '../models/header.model';
 class API {
   private url = process.env.MAGENTO_API;
 
-  async get(path: string, headers?: IHeader) {
+  async get<T>(path: string, headers?: IHeader): Promise<T> {
     try {
       const response = await fetch(`${this.url}/${path}`, {
         method: 'GET',
@@ -20,7 +20,7 @@ class API {
     }
   }
 
-  async post(path: string, payload: any, headers?: IHeader) {
+  async post<T>(path: string, payload: any, headers?: IHeader): Promise<T> {
     try {
       const response = await fetch(`${this.url}/${path}`, {
         method: 'POST',

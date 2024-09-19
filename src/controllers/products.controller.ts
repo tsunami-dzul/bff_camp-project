@@ -22,10 +22,7 @@ export const getProductsByCategory = async (req: Request, res: Response) => {
     const data = await getProductsByCategoryService(categoryId.toString(), +offset, +page, headers);
 
     if (!data.message) {
-      res.json({
-        ok: true,
-        data,
-      });
+      res.json({ ...data });
     } else {
       console.error(data.message);
 
