@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProductsByCategoryService = void 0;
-const generateProductsByCategoryIdUrl_1 = require("../utils/generateProductsByCategoryIdUrl");
+exports.getProductBySKUService = exports.getProductsByCategoryService = void 0;
 const API_1 = __importDefault(require("../api/API"));
+const generateProductsByCategoryIdUrl_1 = require("../utils/generateProductsByCategoryIdUrl");
 const getProductsByCategoryService = (categoryId, offset, limit, bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const url = (0, generateProductsByCategoryIdUrl_1.generateProductsByCategoryIdUrl)(categoryId, offset, limit);
@@ -26,3 +26,14 @@ const getProductsByCategoryService = (categoryId, offset, limit, bearerToken) =>
     }
 });
 exports.getProductsByCategoryService = getProductsByCategoryService;
+const getProductBySKUService = (sku, bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const url = (0, generateProductsByCategoryIdUrl_1.generateProductsBySKUUrl)(sku);
+        const data = yield API_1.default.get(url, bearerToken);
+        return data;
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getProductBySKUService = getProductBySKUService;

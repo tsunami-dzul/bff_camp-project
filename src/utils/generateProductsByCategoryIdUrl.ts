@@ -16,3 +16,13 @@ export const generateProductsByCategoryIdUrl = (categoryId: string, offset: numb
 
   return `products?${queryParams.toString()}`;
 };
+
+export const generateProductsBySKUUrl = (sku: string) => {
+  const queryParams = new URLSearchParams();
+
+  queryParams.set('searchCriteria[filter_groups][0][filters][0][field]', 'sku');
+  queryParams.set('searchCriteria[filter_groups][0][filters][0][value]', `${sku}`);
+  queryParams.set('searchCriteria[filter_groups][0][filters][0][condition_type]', 'eq');
+
+  return `products?${queryParams.toString()}`;
+};
