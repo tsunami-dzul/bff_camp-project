@@ -18,7 +18,7 @@ class API {
     }
   }
 
-  async post<T>(path: string, payload: any, bearerToken?: string): Promise<T> {
+  async post<T>(path: string, payload?: any, bearerToken?: string): Promise<T> {
     try {
       const response = await fetch(`${this.url}/${path}`, {
         method: 'POST',
@@ -27,6 +27,45 @@ class API {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw new Error('There were an unexpcted error');
+    }
+  }
+
+  async put<T>(path: string, payload?: any, bearerToken?: string): Promise<T> {
+    try {
+      const response = await fetch(`${this.url}/${path}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: bearerToken ?? '',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      console.error(error);
+
+      throw new Error('There were an unexpcted error');
+    }
+  }
+
+  async delete<T>(path: string, bearerToken?: string): Promise<T> {
+    try {
+      const response = await fetch(`${this.url}/${path}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: bearerToken ?? '',
+          'Content-Type': 'application/json',
+        },
       });
       const data = await response.json();
 

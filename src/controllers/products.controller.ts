@@ -13,7 +13,7 @@ export const getProducts = async (req: Request, res: Response) => {
       getProductBySku(req, res);
     } else {
       res.json({
-        message: 'There is no match for the provided path',
+        message: 'Request does not match any route.',
       });
     }
   } catch (error) {

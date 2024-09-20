@@ -25,7 +25,7 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         else {
             res.json({
-                message: 'There is no match for the provided path',
+                message: 'Request does not match any route.',
             });
         }
     }

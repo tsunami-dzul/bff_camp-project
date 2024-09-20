@@ -17,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', require('./routers/auth.router'));
+app.use('/api/carts', require('./routers/cart.router'));
 app.use('/api/products', require('./routers/products.router'));
 app.use('/api/categories', require('./routers/categories.router'));
 
