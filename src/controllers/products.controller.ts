@@ -18,7 +18,6 @@ export const getProducts = async (req: Request, res: Response) => {
     }
   } catch (error) {
     res.status(500).json({
-      ok: false,
       message: error,
     });
   }
@@ -47,13 +46,11 @@ const getProductsByCategory = async (req: Request, res: Response) => {
       console.error(data.message);
 
       res.json({
-        ok: true,
         message: 'There was an unexpected error',
       });
     }
   } catch (error) {
     res.status(500).json({
-      ok: false,
       message: error,
     });
   }
@@ -66,7 +63,6 @@ const getProductBySku = async (req: Request, res: Response) => {
 
     if (!sku) {
       return res.status(400).json({
-        ok: false,
         message: 'The categoryId query value must be provided',
       });
     }
@@ -79,13 +75,11 @@ const getProductBySku = async (req: Request, res: Response) => {
       console.error(data.message);
 
       res.json({
-        ok: true,
         message: 'There was an unexpected error',
       });
     }
   } catch (error) {
     res.status(500).json({
-      ok: false,
       message: error,
     });
   }

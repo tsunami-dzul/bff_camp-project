@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCartsByIdItemsService = exports.getCartsByIdService = exports.createGuestCartService = void 0;
+exports.removeCartLineItemService = exports.changeCartLineItemService = exports.addCartLineItemService = exports.getCartsByIdItemsService = exports.getCartsByIdService = exports.createGuestCartService = void 0;
 const API_1 = __importDefault(require("../api/API"));
 const createGuestCartService = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -44,3 +44,33 @@ const getCartsByIdItemsService = (cartId) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.getCartsByIdItemsService = getCartsByIdItemsService;
+const addCartLineItemService = (cartId, cartItems) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield API_1.default.post(`guest-carts/${cartId}/items`, cartItems);
+        return data;
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.addCartLineItemService = addCartLineItemService;
+const changeCartLineItemService = (cartId, itemId, cartItems) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield API_1.default.put(`guest-carts/${cartId}/items/${itemId}`, cartItems);
+        return data;
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.changeCartLineItemService = changeCartLineItemService;
+const removeCartLineItemService = (cartId, itemId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield API_1.default.delete(`guest-carts/${cartId}/items/${itemId}`);
+        return data;
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.removeCartLineItemService = removeCartLineItemService;

@@ -22,14 +22,12 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }

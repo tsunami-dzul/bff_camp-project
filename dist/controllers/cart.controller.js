@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
+exports.removeCartLineItem = exports.changeCartLineItem = exports.addCartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
 const cart_service_1 = require("../services/cart.service");
 const createGuestCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -20,14 +20,12 @@ const createGuestCart = (req, res) => __awaiter(void 0, void 0, void 0, function
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
@@ -43,14 +41,12 @@ const getCartById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
@@ -66,16 +62,101 @@ const getCartByIdItems = (req, res) => __awaiter(void 0, void 0, void 0, functio
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
 });
 exports.getCartByIdItems = getCartByIdItems;
+const addCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cartId = req.params.id;
+        const cartItems = {
+            item_id: req.body.cartItem.item_id,
+            sku: req.body.cartItem.sku,
+            qty: req.body.cartItem.qty,
+            name: req.body.cartItem.name,
+            price: req.body.cartItem.price,
+            product_type: req.body.cartItem.product_type,
+            quote_id: req.body.cartItem.quote_id,
+            product_option: req.body.cartItem.product_option,
+            extension_attributes: req.body.cartItem.extension_attributes,
+        };
+        const data = yield (0, cart_service_1.addCartLineItemService)(cartId, cartItems);
+        if (!data.message) {
+            res.json(data);
+        }
+        else {
+            console.error(data.message);
+            res.json({
+                message: 'There was an unexpected error',
+            });
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.addCartLineItem = addCartLineItem;
+const changeCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cartId = req.params.id;
+        const itemId = req.params.itemId;
+        const cartItems = {
+            item_id: req.body.item_id,
+            sku: req.body.sku,
+            qty: req.body.qty,
+            name: req.body.name,
+            price: req.body.price,
+            product_type: req.body.product_type,
+            quote_id: req.body.product_id,
+            product_option: req.body.product_option,
+            extension_attributes: req.body.extension_attributes,
+        };
+        const data = yield (0, cart_service_1.changeCartLineItemService)(cartId, itemId, cartItems);
+        if (!data.message) {
+            res.json(data);
+        }
+        else {
+            console.error(data.message);
+            res.json({
+                message: 'There was an unexpected error',
+            });
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.changeCartLineItem = changeCartLineItem;
+const removeCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cartId = req.params.id;
+        const itemId = req.params.itemId;
+        const data = yield (0, cart_service_1.removeCartLineItemService)(cartId, itemId);
+        if (!data.message) {
+            res.json(data);
+        }
+        else {
+            console.error(data.message);
+            res.json({
+                message: 'There was an unexpected error',
+            });
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.removeCartLineItem = removeCartLineItem;

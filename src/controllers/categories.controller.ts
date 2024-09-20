@@ -14,13 +14,11 @@ export const getCategories = async (req: Request, res: Response) => {
       console.error(data.message);
 
       res.json({
-        ok: true,
         message: 'There was an unexpected error',
       });
     }
   } catch (error) {
     res.status(500).json({
-      ok: false,
       message: error,
     });
   }

@@ -31,7 +31,6 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
@@ -57,14 +56,12 @@ const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, fu
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
@@ -76,7 +73,6 @@ const getProductBySku = (req, res) => __awaiter(void 0, void 0, void 0, function
         const bearerToken = (0, getToken_1.getToken)(req);
         if (!sku) {
             return res.status(400).json({
-                ok: false,
                 message: 'The categoryId query value must be provided',
             });
         }
@@ -87,14 +83,12 @@ const getProductBySku = (req, res) => __awaiter(void 0, void 0, void 0, function
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
