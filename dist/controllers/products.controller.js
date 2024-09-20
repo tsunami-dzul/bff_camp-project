@@ -19,14 +19,13 @@ const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, fu
         const page = (_b = req.query.page) !== null && _b !== void 0 ? _b : 10;
         const offset = (_c = req.query.offset) !== null && _c !== void 0 ? _c : 0;
         const bearerToken = (0, getToken_1.getToken)(req);
-        const headers = { Authorization: bearerToken };
         if (!categoryId) {
             return res.status(400).json({
                 ok: false,
                 message: 'The categoryId query value must be provided',
             });
         }
-        const data = yield (0, product_service_1.getProductsByCategoryService)(categoryId.toString(), +offset, +page, headers);
+        const data = yield (0, product_service_1.getProductsByCategoryService)(categoryId.toString(), +offset, +page, bearerToken);
         if (!data.message) {
             res.json(Object.assign({}, data));
         }

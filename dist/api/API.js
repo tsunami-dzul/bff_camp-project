@@ -13,15 +13,14 @@ class API {
     constructor() {
         this.url = process.env.MAGENTO_API;
     }
-    get(path, headers) {
+    get(path, bearerToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
             try {
                 const response = yield fetch(`${this.url}/${path}`, {
                     method: 'GET',
                     headers: {
-                        Authorization: (_a = headers === null || headers === void 0 ? void 0 : headers.Authorization) !== null && _a !== void 0 ? _a : '',
-                        'Content-Type': (_b = headers === null || headers === void 0 ? void 0 : headers.ContentType) !== null && _b !== void 0 ? _b : 'application/json',
+                        Authorization: bearerToken !== null && bearerToken !== void 0 ? bearerToken : '',
+                        'Content-Type': 'application/json',
                     },
                 });
                 const data = yield response.json();
@@ -32,15 +31,14 @@ class API {
             }
         });
     }
-    post(path, payload, headers) {
+    post(path, payload, bearerToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
             try {
                 const response = yield fetch(`${this.url}/${path}`, {
                     method: 'POST',
                     headers: {
-                        Authorization: (_a = headers === null || headers === void 0 ? void 0 : headers.Authorization) !== null && _a !== void 0 ? _a : '',
-                        'Content-Type': (_b = headers === null || headers === void 0 ? void 0 : headers.ContentType) !== null && _b !== void 0 ? _b : 'application/json',
+                        Authorization: bearerToken !== null && bearerToken !== void 0 ? bearerToken : '',
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(payload),
                 });

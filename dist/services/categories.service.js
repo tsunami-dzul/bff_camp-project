@@ -14,9 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCategoriesService = void 0;
 const API_1 = __importDefault(require("../api/API"));
-const getCategoriesService = (headers) => __awaiter(void 0, void 0, void 0, function* () {
+const getCategoriesService = (bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield API_1.default.get('categories', headers);
+        const data = yield API_1.default.get('categories', bearerToken);
         return data;
     }
     catch (error) {

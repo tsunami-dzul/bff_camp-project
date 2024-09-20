@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { getProductsByCategoryService } from '../services/product.service';
 import { getToken } from '../utils/getToken';
-import { IHeader } from '../models/header.model';
 
 export const getProductsByCategory = async (req: Request, res: Response) => {
   try {
@@ -10,7 +9,6 @@ export const getProductsByCategory = async (req: Request, res: Response) => {
     const offset = req.query.offset ?? 0;
 
     const bearerToken = getToken(req);
-    const headers: IHeader = { Authorization: bearerToken };
 
     if (!categoryId) {
       return res.status(400).json({
@@ -19,7 +17,7 @@ export const getProductsByCategory = async (req: Request, res: Response) => {
       });
     }
 
-    const data = await getProductsByCategoryService(categoryId.toString(), +offset, +page, headers);
+    const data = await getProductsByCategoryService(categoryId.toString(), +offset, +page, bearerToken);
 
     if (!data.message) {
       res.json({ ...data });

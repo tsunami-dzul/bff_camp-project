@@ -15,10 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProductsByCategoryService = void 0;
 const generateProductsByCategoryIdUrl_1 = require("../utils/generateProductsByCategoryIdUrl");
 const API_1 = __importDefault(require("../api/API"));
-const getProductsByCategoryService = (categoryId, offset, limit, headers) => __awaiter(void 0, void 0, void 0, function* () {
+const getProductsByCategoryService = (categoryId, offset, limit, bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const url = (0, generateProductsByCategoryIdUrl_1.generateProductsByCategoryIdUrl)(categoryId, offset, limit);
-        const data = yield API_1.default.get(url, headers);
+        const data = yield API_1.default.get(url, bearerToken);
         return data;
     }
     catch (error) {

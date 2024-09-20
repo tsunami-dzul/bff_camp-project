@@ -15,8 +15,7 @@ const getToken_1 = require("../utils/getToken");
 const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const bearerToken = (0, getToken_1.getToken)(req);
-        const headers = { Authorization: bearerToken };
-        const data = yield (0, categories_service_1.getCategoriesService)(headers);
+        const data = yield (0, categories_service_1.getCategoriesService)(bearerToken);
         if (!data.message) {
             res.json(Object.assign({}, data));
         }

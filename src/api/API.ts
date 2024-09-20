@@ -1,15 +1,13 @@
-import { IHeader } from '../models/header.model';
-
 class API {
   private url = process.env.MAGENTO_API;
 
-  async get<T>(path: string, headers?: IHeader): Promise<T> {
+  async get<T>(path: string, bearerToken?: string): Promise<T> {
     try {
       const response = await fetch(`${this.url}/${path}`, {
         method: 'GET',
         headers: {
-          Authorization: headers?.Authorization ?? '',
-          'Content-Type': headers?.ContentType ?? 'application/json',
+          Authorization: bearerToken ?? '',
+          'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
@@ -20,13 +18,13 @@ class API {
     }
   }
 
-  async post<T>(path: string, payload: any, headers?: IHeader): Promise<T> {
+  async post<T>(path: string, payload: any, bearerToken?: string): Promise<T> {
     try {
       const response = await fetch(`${this.url}/${path}`, {
         method: 'POST',
         headers: {
-          Authorization: headers?.Authorization ?? '',
-          'Content-Type': headers?.ContentType ?? 'application/json',
+          Authorization: bearerToken ?? '',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
