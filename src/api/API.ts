@@ -24,7 +24,7 @@ class API {
         method: 'POST',
         headers: {
           Authorization: bearerToken ?? '',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify(payload),
       });

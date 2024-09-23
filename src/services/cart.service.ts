@@ -43,7 +43,7 @@ export const addCartLineItemService = async (cartId: string, cartItems: ICartIte
 
 export const changeCartLineItemService = async (
   cartId: string,
-  itemId: string,
+  itemId: number,
   cartItems: ICartItem
 ): Promise<ICart> => {
   try {
@@ -55,7 +55,7 @@ export const changeCartLineItemService = async (
   }
 };
 
-export const removeCartLineItemService = async (cartId: string, itemId: string): Promise<ICart> => {
+export const removeCartLineItemService = async (cartId: string, itemId: number): Promise<ICart> => {
   try {
     const data = await api.delete<ICart>(`guest-carts/${cartId}/items/${itemId}`);
 

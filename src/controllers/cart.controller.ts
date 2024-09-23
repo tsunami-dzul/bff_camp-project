@@ -7,7 +7,7 @@ import {
   changeCartLineItemService,
   removeCartLineItemService,
 } from '../services/cart.service';
-import { ICartItem } from '../models/cart.model';
+import { CartItemActions, ICart, ICartItem } from '../models/cart.model';
 
 export const createGuestCart = async (req: Request, res: Response) => {
   try {
@@ -73,28 +73,39 @@ export const getCartByIdItems = async (req: Request, res: Response) => {
   }
 };
 
-export const addCartLineItem = async (req: Request, res: Response) => {
+export const cartLineItem = async (req: Request, res: Response) => {
   try {
     const cartId = req.params.id;
-    const cartItems: ICartItem = {
-      item_id: req.body.cartItem.item_id,
-      sku: req.body.cartItem.sku,
-      qty: req.body.cartItem.qty,
-      name: req.body.cartItem.name,
-      price: req.body.cartItem.price,
-      product_type: req.body.cartItem.product_type,
-      quote_id: req.body.cartItem.quote_id,
-      product_option: req.body.cartItem.product_option,
-      extension_attributes: req.body.cartItem.extension_attributes,
-    };
+    const action = req.body.action;
+    let response: ICart | null = null;
 
-    const data = await addCartLineItemService(cartId, cartItems);
+    if (action === CartItemActions.AddLineItem) {
+      const { variantId, quantity } = req.body.AddLineItem;
 
-    if (!data.message) {
-      res.json(data);
+      const data = addCartLineItem(cartId, variantId, quantity);
+
+      response = await data;
+    } else if (action === CartItemActions.ChangeLineItemQuantity) {
+      const { lineItemId, quantity } = req.body.ChangeLineItemQuantity;
+
+      const data = changeCartLineItem(cartId, lineItemId, quantity);
+
+      response = await data;
+    } else if (action === CartItemActions.RemoveLineItem) {
+      const { lineItemId } = req.body.RemoveLineItem;
+
+      const data = removeCartLineItem(cartId, lineItemId);
+
+      response = await data;
     } else {
-      console.error(data.message);
+      return res.status(404).json({
+        message: 'The operation provided is not recognized',
+      });
+    }
 
+    if (response && !response.message) {
+      res.json(response);
+    } else {
       res.json({
         message: 'There was an unexpected error',
       });
@@ -106,59 +117,40 @@ export const addCartLineItem = async (req: Request, res: Response) => {
   }
 };
 
-export const changeCartLineItem = async (req: Request, res: Response) => {
+const addCartLineItem = async (cartId: string, variantId: string, quantity: number) => {
   try {
-    const cartId = req.params.id;
-    const itemId = req.params.itemId;
     const cartItems: ICartItem = {
-      item_id: req.body.item_id,
-      sku: req.body.sku,
-      qty: req.body.qty,
-      name: req.body.name,
-      price: req.body.price,
-      product_type: req.body.product_type,
-      quote_id: req.body.product_id,
-      product_option: req.body.product_option,
-      extension_attributes: req.body.extension_attributes,
+      cartItem: {
+        sku: variantId,
+        qty: quantity,
+      },
     };
 
-    const data = await changeCartLineItemService(cartId, itemId, cartItems);
-
-    if (!data.message) {
-      res.json(data);
-    } else {
-      console.error(data.message);
-
-      res.json({
-        message: 'There was an unexpected error',
-      });
-    }
+    return await addCartLineItemService(cartId, cartItems);
   } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
+    throw error;
   }
 };
 
-export const removeCartLineItem = async (req: Request, res: Response) => {
+const changeCartLineItem = async (cartId: string, lineItemId: number, quantity: number) => {
   try {
-    const cartId = req.params.id;
-    const itemId = req.params.itemId;
+    const cartItems: ICartItem = {
+      cartItem: {
+        item_id: lineItemId,
+        qty: quantity,
+      },
+    };
 
-    const data = await removeCartLineItemService(cartId, itemId);
-
-    if (!data.message) {
-      res.json(data);
-    } else {
-      console.error(data.message);
-
-      res.json({
-        message: 'There was an unexpected error',
-      });
-    }
+    return await changeCartLineItemService(cartId, lineItemId, cartItems);
   } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
+    throw error;
+  }
+};
+
+const removeCartLineItem = async (cartId: string, lineItemId: number) => {
+  try {
+    return await removeCartLineItemService(cartId, lineItemId);
+  } catch (error) {
+    throw error;
   }
 };

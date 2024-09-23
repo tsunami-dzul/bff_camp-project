@@ -6,7 +6,5 @@ const router = (0, express_1.Router)();
 router.get('/:id', cart_controller_1.getCartById);
 router.get('/:id/items', cart_controller_1.getCartByIdItems);
 router.post('/', cart_controller_1.createGuestCart);
-router.post('/:id/items', cart_controller_1.addCartLineItem);
-router.put('/:id/items/:itemId', cart_controller_1.changeCartLineItem);
-router.delete('/:id/items/:itemId', cart_controller_1.removeCartLineItem);
+router.put('/:id', cart_controller_1.cartLineItem);
 module.exports = router;

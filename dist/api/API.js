@@ -34,12 +34,11 @@ class API {
     post(path, payload, bearerToken) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log(JSON.stringify(payload));
-                const response = yield fetch('https://magento.test/rest/default/V1/guest-carts/UNIQhNcx1unAMoGWMBE4g8I2BxZ4mV1A/items', {
+                const response = yield fetch(`${this.url}/${path}`, {
                     method: 'POST',
                     headers: {
                         Authorization: bearerToken !== null && bearerToken !== void 0 ? bearerToken : '',
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json; charset=utf-8',
                     },
                     body: JSON.stringify(payload),
                 });

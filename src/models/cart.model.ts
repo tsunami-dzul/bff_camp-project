@@ -1,4 +1,4 @@
-interface ICosutomer {
+interface ICostutomer {
   email: string | null;
   firstname: string | null;
   lastname: string | null;
@@ -45,7 +45,7 @@ export interface ICart {
   items: [];
   items_count: number;
   items_qty: number;
-  customer: ICosutomer;
+  customer: ICostutomer;
   billing_address: IBillingAddress;
   orig_order_id: number;
   currency: ICurrency;
@@ -57,71 +57,18 @@ export interface ICart {
   message?: string;
 }
 
-interface ICustomOptions {
-  option_id: string;
-  option_value: string;
-  extension_attributes: {
-    file_info: {
-      base64_encoded_data: null;
-      type: string | null;
-      name: string | null;
-    };
-  };
-}
-
-interface IExtensionAttributesItems {
-  custom_options: ICustomOptions;
-  bundle_options: [
-    {
-      option_id: number;
-      option_qty: number;
-      option_selections: [];
-      extension_attributes: {};
-    }
-  ];
-  downloadable_option: {
-    downloadable_links: [number];
-  };
-  giftcard_item_option: {
-    giftcard_amount: string;
-    custom_giftcard_amount: number;
-    giftcard_sender_name: string;
-    giftcard_recipient_name: string;
-    giftcard_sender_email: string;
-    giftcard_recipient_email: string;
-    giftcard_message: string;
-    extension_attributes: {
-      giftcard_created_codes: [string];
-    };
-  };
-  configurable_item_options: [
-    {
-      option_id: string;
-      option_value: number;
-      extension_attributes: {};
-    }
-  ];
-  grouped_options: [
-    {
-      id: number;
-      qty: number;
-      extension_attributes: {};
-    }
-  ];
-}
-
-interface IProductOption {
-  extension_attributes: IExtensionAttributesItems;
+interface IItem {
+  item_id?: number;
+  sku?: string;
+  qty?: number;
 }
 
 export interface ICartItem {
-  item_id: number;
-  sku: string;
-  qty: number;
-  name: string;
-  price: number;
-  product_type: string;
-  quote_id: string;
-  product_option?: IProductOption;
-  extension_attributes?: IExtensionAttributesItems;
+  cartItem: IItem;
 }
+
+export const CartItemActions = {
+  AddLineItem: 'AddLineItem',
+  ChangeLineItemQuantity: 'ChangeLineItemQuantity',
+  RemoveLineItem: 'RemoveLineItem',
+};

@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeCartLineItem = exports.changeCartLineItem = exports.addCartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
+exports.cartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
 const cart_service_1 = require("../services/cart.service");
+const cart_model_1 = require("../models/cart.model");
 const createGuestCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield (0, cart_service_1.createGuestCartService)();
@@ -73,90 +74,80 @@ const getCartByIdItems = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getCartByIdItems = getCartByIdItems;
-const addCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const cartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cartId = req.params.id;
+        const action = req.body.action;
+        let response = null;
+        if (action === cart_model_1.CartItemActions.AddLineItem) {
+            const { variantId, quantity } = req.body.AddLineItem;
+            const data = addCartLineItem(cartId, variantId, quantity);
+            response = yield data;
+        }
+        else if (action === cart_model_1.CartItemActions.ChangeLineItemQuantity) {
+            const { lineItemId, quantity } = req.body.ChangeLineItemQuantity;
+            const data = changeCartLineItem(cartId, lineItemId, quantity);
+            response = yield data;
+        }
+        else if (action === cart_model_1.CartItemActions.RemoveLineItem) {
+            const { lineItemId } = req.body.RemoveLineItem;
+            const data = removeCartLineItem(cartId, lineItemId);
+            response = yield data;
+        }
+        else {
+            return res.status(404).json({
+                message: 'The operation provided is not recognized',
+            });
+        }
+        if (response && !response.message) {
+            res.json(response);
+        }
+        else {
+            res.json({
+                message: 'There was an unexpected error',
+            });
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.cartLineItem = cartLineItem;
+const addCartLineItem = (cartId, variantId, quantity) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
         const cartItems = {
-            item_id: req.body.cartItem.item_id,
-            sku: req.body.cartItem.sku,
-            qty: req.body.cartItem.qty,
-            name: req.body.cartItem.name,
-            price: req.body.cartItem.price,
-            product_type: req.body.cartItem.product_type,
-            quote_id: req.body.cartItem.quote_id,
-            product_option: req.body.cartItem.product_option,
-            extension_attributes: req.body.cartItem.extension_attributes,
+            cartItem: {
+                sku: variantId,
+                qty: quantity,
+            },
         };
-        const data = yield (0, cart_service_1.addCartLineItemService)(cartId, cartItems);
-        if (!data.message) {
-            res.json(data);
-        }
-        else {
-            console.error(data.message);
-            res.json({
-                message: 'There was an unexpected error',
-            });
-        }
+        return yield (0, cart_service_1.addCartLineItemService)(cartId, cartItems);
     }
     catch (error) {
-        res.status(500).json({
-            message: error,
-        });
+        throw error;
     }
 });
-exports.addCartLineItem = addCartLineItem;
-const changeCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const changeCartLineItem = (cartId, lineItemId, quantity) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const cartId = req.params.id;
-        const itemId = req.params.itemId;
         const cartItems = {
-            item_id: req.body.item_id,
-            sku: req.body.sku,
-            qty: req.body.qty,
-            name: req.body.name,
-            price: req.body.price,
-            product_type: req.body.product_type,
-            quote_id: req.body.product_id,
-            product_option: req.body.product_option,
-            extension_attributes: req.body.extension_attributes,
+            cartItem: {
+                item_id: lineItemId,
+                qty: quantity,
+            },
         };
-        const data = yield (0, cart_service_1.changeCartLineItemService)(cartId, itemId, cartItems);
-        if (!data.message) {
-            res.json(data);
-        }
-        else {
-            console.error(data.message);
-            res.json({
-                message: 'There was an unexpected error',
-            });
-        }
+        return yield (0, cart_service_1.changeCartLineItemService)(cartId, lineItemId, cartItems);
     }
     catch (error) {
-        res.status(500).json({
-            message: error,
-        });
+        throw error;
     }
 });
-exports.changeCartLineItem = changeCartLineItem;
-const removeCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const removeCartLineItem = (cartId, lineItemId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const cartId = req.params.id;
-        const itemId = req.params.itemId;
-        const data = yield (0, cart_service_1.removeCartLineItemService)(cartId, itemId);
-        if (!data.message) {
-            res.json(data);
-        }
-        else {
-            console.error(data.message);
-            res.json({
-                message: 'There was an unexpected error',
-            });
-        }
+        return yield (0, cart_service_1.removeCartLineItemService)(cartId, lineItemId);
     }
     catch (error) {
-        res.status(500).json({
-            message: error,
-        });
+        throw error;
     }
 });
-exports.removeCartLineItem = removeCartLineItem;
