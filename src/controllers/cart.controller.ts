@@ -6,8 +6,10 @@ import {
   addCartLineItemService,
   changeCartLineItemService,
   removeCartLineItemService,
+  shippingAddressService,
+  createOfferService,
 } from '../services/cart.service';
-import { CartItemActions, ICart, ICartItem } from '../models/cart.model';
+import { CartItemActions, ICart, ICartItem, IShippingPayload } from '../models/cart.model';
 
 export const createGuestCart = async (req: Request, res: Response) => {
   try {
@@ -97,6 +99,38 @@ export const cartLineItem = async (req: Request, res: Response) => {
       const data = removeCartLineItem(cartId, lineItemId);
 
       response = await data;
+    } else if (action === CartItemActions.SetShippingAddress) {
+      const shippingData: IShippingPayload = {
+        addressInformation: {
+          shipping_address: {
+            country_id: req.body.SetShippingAddress.country,
+            firstname: req.body.SetShippingAddress.firstName,
+            lastname: req.body.SetShippingAddress.lastName,
+            street: [req.body.SetShippingAddress.streetName, req.body.SetShippingAddress.streetNumber],
+            postcode: req.body.SetShippingAddress.postalCode,
+            city: req.body.SetShippingAddress.city,
+            region: req.body.SetShippingAddress.region,
+            email: req.body.SetShippingAddress.email,
+          },
+          billing_address: {
+            country_id: req.body.SetShippingAddress.country,
+            firstname: req.body.SetShippingAddress.firstName,
+            lastname: req.body.SetShippingAddress.lastName,
+            street: [req.body.SetShippingAddress.streetName, req.body.SetShippingAddress.streetNumber],
+            postcode: req.body.SetShippingAddress.postalCode,
+            city: req.body.SetShippingAddress.city,
+            region: req.body.SetShippingAddress.region,
+            email: req.body.SetShippingAddress.email,
+            telephone: '0',
+          },
+          shipping_method_code: 'flatrate',
+          shipping_carrier_code: 'flatrate',
+        },
+      };
+
+      const data = await shippingAddressService(cartId, shippingData);
+
+      return res.json(data);
     } else {
       return res.status(404).json({
         message: 'The operation provided is not recognized',
@@ -110,6 +144,20 @@ export const cartLineItem = async (req: Request, res: Response) => {
         message: 'There was an unexpected error',
       });
     }
+  } catch (error) {
+    res.status(500).json({
+      message: error,
+    });
+  }
+};
+
+export const createOffer = async (req: Request, res: Response) => {
+  try {
+    const cartId = req.params.id;
+
+    const data = await createOfferService(cartId);
+
+    res.json(data);
   } catch (error) {
     res.status(500).json({
       message: error,

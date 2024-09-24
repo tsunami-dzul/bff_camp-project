@@ -5,4 +5,5 @@ exports.CartItemActions = {
     AddLineItem: 'AddLineItem',
     ChangeLineItemQuantity: 'ChangeLineItemQuantity',
     RemoveLineItem: 'RemoveLineItem',
+    SetShippingAddress: 'SetShippingAddress',
 };

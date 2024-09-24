@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
+exports.createOffer = exports.cartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
 const cart_service_1 = require("../services/cart.service");
 const cart_model_1 = require("../models/cart.model");
 const createGuestCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -94,6 +94,37 @@ const cartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             const data = removeCartLineItem(cartId, lineItemId);
             response = yield data;
         }
+        else if (action === cart_model_1.CartItemActions.SetShippingAddress) {
+            const shippingData = {
+                addressInformation: {
+                    shipping_address: {
+                        country_id: req.body.SetShippingAddress.country,
+                        firstname: req.body.SetShippingAddress.firstName,
+                        lastname: req.body.SetShippingAddress.lastName,
+                        street: [req.body.SetShippingAddress.streetName, req.body.SetShippingAddress.streetNumber],
+                        postcode: req.body.SetShippingAddress.postalCode,
+                        city: req.body.SetShippingAddress.city,
+                        region: req.body.SetShippingAddress.region,
+                        email: req.body.SetShippingAddress.email,
+                    },
+                    billing_address: {
+                        country_id: req.body.SetShippingAddress.country,
+                        firstname: req.body.SetShippingAddress.firstName,
+                        lastname: req.body.SetShippingAddress.lastName,
+                        street: [req.body.SetShippingAddress.streetName, req.body.SetShippingAddress.streetNumber],
+                        postcode: req.body.SetShippingAddress.postalCode,
+                        city: req.body.SetShippingAddress.city,
+                        region: req.body.SetShippingAddress.region,
+                        email: req.body.SetShippingAddress.email,
+                        telephone: '0',
+                    },
+                    shipping_method_code: 'flatrate',
+                    shipping_carrier_code: 'flatrate',
+                },
+            };
+            const data = yield (0, cart_service_1.shippingAddressService)(cartId, shippingData);
+            return res.json(data);
+        }
         else {
             return res.status(404).json({
                 message: 'The operation provided is not recognized',
@@ -115,6 +146,19 @@ const cartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.cartLineItem = cartLineItem;
+const createOffer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cartId = req.params.id;
+        const data = yield (0, cart_service_1.createOfferService)(cartId);
+        res.json(data);
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.createOffer = createOffer;
 const addCartLineItem = (cartId, variantId, quantity) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cartItems = {

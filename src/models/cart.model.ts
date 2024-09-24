@@ -67,8 +67,44 @@ export interface ICartItem {
   cartItem: IItem;
 }
 
+export interface IAddressInformationPayload {
+  country: string;
+  firstName: string;
+  lastName: string;
+  streetName: string;
+  streetNumber: string;
+  postalCode: string;
+  city: string;
+  region: string;
+  email: string;
+}
+
+export interface IAddressInformation {
+  shipping_address: IShippingAddress;
+  billing_address: IShippingAddress;
+  shipping_method_code: string;
+  shipping_carrier_code: string;
+}
+
+export interface IShippingAddress {
+  country_id: string;
+  firstname: string;
+  lastname: string;
+  postcode: string;
+  city: string;
+  region: string;
+  street: string[];
+  email: string;
+  telephone?: string;
+}
+
+export interface IShippingPayload {
+  addressInformation: IAddressInformation;
+}
+
 export const CartItemActions = {
   AddLineItem: 'AddLineItem',
   ChangeLineItemQuantity: 'ChangeLineItemQuantity',
   RemoveLineItem: 'RemoveLineItem',
+  SetShippingAddress: 'SetShippingAddress',
 };
