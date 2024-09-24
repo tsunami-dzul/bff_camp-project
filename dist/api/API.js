@@ -38,9 +38,48 @@ class API {
                     method: 'POST',
                     headers: {
                         Authorization: bearerToken !== null && bearerToken !== void 0 ? bearerToken : '',
+                        'Content-Type': 'application/json; charset=utf-8',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const data = yield response.json();
+                return data;
+            }
+            catch (error) {
+                console.error(error);
+                throw new Error('There were an unexpcted error');
+            }
+        });
+    }
+    put(path, payload, bearerToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const response = yield fetch(`${this.url}/${path}`, {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: bearerToken !== null && bearerToken !== void 0 ? bearerToken : '',
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(payload),
+                });
+                const data = yield response.json();
+                return data;
+            }
+            catch (error) {
+                console.error(error);
+                throw new Error('There were an unexpcted error');
+            }
+        });
+    }
+    delete(path, bearerToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const response = yield fetch(`${this.url}/${path}`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: bearerToken !== null && bearerToken !== void 0 ? bearerToken : '',
+                        'Content-Type': 'application/json',
+                    },
                 });
                 const data = yield response.json();
                 return data;
