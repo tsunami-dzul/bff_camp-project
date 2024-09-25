@@ -1,4 +1,4 @@
-import api from '../api/API';
+import api from '../../api/API';
 
 export const authService = async (username: string, password: string) => {
   try {

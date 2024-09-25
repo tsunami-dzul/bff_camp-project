@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCategories = void 0;
-const categories_service_1 = require("../services/categories.service");
+const categories_service_1 = require("../services/magento/categories.service");
 const getToken_1 = require("../utils/getToken");
 const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

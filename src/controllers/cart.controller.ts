@@ -7,13 +7,22 @@ import {
   changeCartLineItemService,
   removeCartLineItemService,
   shippingAddressService,
-  createOfferService,
-} from '../services/cart.service';
+} from '../services/magento/cart.service';
 import { CartItemActions, ICart, ICartItem, IShippingPayload } from '../models/cart.model';
+import { config } from '../config/config';
+import { commerceCreateCartService, commerceGetCartByIdService } from '../services/commercetools/cart.service';
+
+const bffTool = process.env.BFF_TOOL;
 
 export const createGuestCart = async (req: Request, res: Response) => {
   try {
-    const data = await createGuestCartService();
+    let data: any = null;
+
+    if (bffTool === config.commercetools) {
+      data = await commerceCreateCartService();
+    } else {
+      data = await createGuestCartService();
+    }
 
     if (!data.message) {
       res.json(data);
@@ -34,8 +43,13 @@ export const createGuestCart = async (req: Request, res: Response) => {
 export const getCartById = async (req: Request, res: Response) => {
   try {
     const cartId = req.params.id;
+    let data: any = null;
 
-    const data = await getCartsByIdService(cartId);
+    if (bffTool === config.commercetools) {
+      data = await commerceGetCartByIdService(cartId);
+    } else {
+      data = await getCartsByIdService(cartId);
+    }
 
     if (!data.message) {
       res.json(data);
@@ -144,20 +158,6 @@ export const cartLineItem = async (req: Request, res: Response) => {
         message: 'There was an unexpected error',
       });
     }
-  } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
-  }
-};
-
-export const createOffer = async (req: Request, res: Response) => {
-  try {
-    const cartId = req.params.id;
-
-    const data = await createOfferService(cartId);
-
-    res.json(data);
   } catch (error) {
     res.status(500).json({
       message: error,

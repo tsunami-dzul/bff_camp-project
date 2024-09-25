@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProducts = void 0;
-const product_service_1 = require("../services/product.service");
+const product_service_1 = require("../services/magento/product.service");
 const getToken_1 = require("../utils/getToken");
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;

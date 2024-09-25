@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
-import { getProductBySKUService, getProductsByCategoryService } from '../services/product.service';
+import { getProductBySKUService, getProductsByCategoryService } from '../services/magento/product.service';
 import { getToken } from '../utils/getToken';
+import { config } from '../config/config';
+import { commerceGetProductsByCategoryService } from '../services/commercetools/product.service';
+
+const bffTool = process.env.BFF_TOOL;
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
@@ -8,9 +12,9 @@ export const getProducts = async (req: Request, res: Response) => {
     const sku = req.query.sku ?? '';
 
     if (categoryId) {
-      getProductsByCategory(req, res);
+      await getProductsByCategory(req, res);
     } else if (sku) {
-      getProductBySku(req, res);
+      await getProductBySku(req, res);
     } else {
       res.json({
         message: 'Request does not match any route.',
@@ -28,17 +32,15 @@ const getProductsByCategory = async (req: Request, res: Response) => {
     const categoryId = req.query.categoryId ?? '';
     const page = req.query.page ?? 10;
     const offset = req.query.offset ?? 0;
+    let data: any = null;
 
     const bearerToken = getToken(req);
 
-    if (!categoryId) {
-      return res.status(400).json({
-        ok: false,
-        message: 'The categoryId query value must be provided',
-      });
+    if (bffTool === config.commercetools) {
+      data = await commerceGetProductsByCategoryService(categoryId.toString());
+    } else {
+      data = await getProductsByCategoryService(categoryId.toString(), +offset, +page, bearerToken);
     }
-
-    const data = await getProductsByCategoryService(categoryId.toString(), +offset, +page, bearerToken);
 
     if (!data.message) {
       res.json({ ...data });

@@ -8,23 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = void 0;
-const auth_service_1 = require("../services/magento/auth.service");
-const auth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getCategoriesService = void 0;
+const API_1 = __importDefault(require("../../api/API"));
+const getCategoriesService = (bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username, password } = req.body;
-        const data = yield (0, auth_service_1.authService)(username, password);
-        res.json({
-            ok: true,
-            data,
-        });
+        const data = yield API_1.default.get('categories', bearerToken);
+        return data;
     }
     catch (error) {
-        res.status(500).json({
-            ok: false,
-            message: error,
-        });
+        throw error;
     }
 });
-exports.auth = auth;
+exports.getCategoriesService = getCategoriesService;

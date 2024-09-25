@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authService } from '../services/auth.service';
+import { authService } from '../services/magento/auth.service';
 import { IAuth } from '../models/auth.model';
 
 export const auth = async (req: Request, res: Response) => {
