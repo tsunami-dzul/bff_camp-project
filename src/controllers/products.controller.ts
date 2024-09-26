@@ -10,36 +10,19 @@ export const getProducts = async (req: Request, res: Response) => {
   try {
     const categoryId = req.query.categoryId ?? '';
     const sku = req.query.sku ?? '';
+    const page = req.query.page ?? 10;
+    const offset = req.query.offset ?? 0;
+    const bearerToken = getToken(req);
+    let data: any = null;
 
     if (categoryId) {
-      await getProductsByCategory(req, res);
+      data = await getProductsByCategory(categoryId.toString(), +page, +offset, bearerToken);
     } else if (sku) {
-      await getProductBySku(req, res);
+      data = await getProductBySku(req, res);
     } else {
       res.json({
         message: 'Request does not match any route.',
       });
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error,
-    });
-  }
-};
-
-const getProductsByCategory = async (req: Request, res: Response) => {
-  try {
-    const categoryId = req.query.categoryId ?? '';
-    const page = req.query.page ?? 10;
-    const offset = req.query.offset ?? 0;
-    let data: any = null;
-
-    const bearerToken = getToken(req);
-
-    if (bffTool === config.commercetools) {
-      data = await commerceGetProductsByCategoryService(categoryId.toString());
-    } else {
-      data = await getProductsByCategoryService(categoryId.toString(), +offset, +page, bearerToken);
     }
 
     if (!data.message) {
@@ -55,6 +38,18 @@ const getProductsByCategory = async (req: Request, res: Response) => {
     res.status(500).json({
       message: error,
     });
+  }
+};
+
+const getProductsByCategory = async (categoryId: string, page: number, offset: number, bearerToken: string) => {
+  try {
+    if (bffTool === config.commercetools) {
+      return await commerceGetProductsByCategoryService(categoryId, bearerToken);
+    } else {
+      return await getProductsByCategoryService(categoryId.toString(), offset, page, bearerToken);
+    }
+  } catch (error) {
+    throw error;
   }
 };
 

@@ -11,7 +11,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class API {
     constructor() {
-        this.url = process.env.MAGENTO_API;
+        var _a, _b;
+        this.url = '';
+        const bffTool = process.env.BFF_TOOL;
+        if (bffTool === 'magento') {
+            this.url = process.env.MAGENTO_API;
+        }
+        else {
+            const partialUrl = (_a = process.env.CTP_API_URL) === null || _a === void 0 ? void 0 : _a.replace('region', (_b = process.env.CTP_REGION) !== null && _b !== void 0 ? _b : '');
+            this.url = `${partialUrl}/${process.env.CTP_PROJECT_KEY}`;
+        }
     }
     get(path, bearerToken) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,6 +43,9 @@ class API {
     post(path, payload, bearerToken) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                if (path.indexOf('@') >= 0) {
+                    this.url = path;
+                }
                 const response = yield fetch(`${this.url}/${path}`, {
                     method: 'POST',
                     headers: {

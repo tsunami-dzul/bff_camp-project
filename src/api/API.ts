@@ -9,7 +9,7 @@ class API {
     } else {
       const partialUrl = process.env.CTP_API_URL?.replace('region', process.env.CTP_REGION ?? '');
 
-      this.url = `${partialUrl}${process.env.CTP_PROJECT_KEY}`;
+      this.url = `${partialUrl}/${process.env.CTP_PROJECT_KEY}`;
     }
   }
 

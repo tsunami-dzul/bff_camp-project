@@ -9,12 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createOffer = exports.cartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
+exports.commerceCartLineItem = exports.cartLineItem = exports.getCartByIdItems = exports.getCartById = exports.createGuestCart = void 0;
 const cart_service_1 = require("../services/magento/cart.service");
 const cart_model_1 = require("../models/cart.model");
+const config_1 = require("../config/config");
+const cart_service_2 = require("../services/commercetools/cart.service");
+const getToken_1 = require("../utils/getToken");
+const bffTool = process.env.BFF_TOOL;
 const createGuestCart = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield (0, cart_service_1.createGuestCartService)();
+        let data = null;
+        const bearerToken = (0, getToken_1.getToken)(req);
+        if (bffTool === config_1.config.commercetools) {
+            data = yield (0, cart_service_2.commerceCreateCartService)(bearerToken);
+        }
+        else {
+            data = yield (0, cart_service_1.createGuestCartService)();
+        }
         if (!data.message) {
             res.json(data);
         }
@@ -34,8 +45,15 @@ const createGuestCart = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.createGuestCart = createGuestCart;
 const getCartById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const bearerToken = (0, getToken_1.getToken)(req);
         const cartId = req.params.id;
-        const data = yield (0, cart_service_1.getCartsByIdService)(cartId);
+        let data = null;
+        if (bffTool === config_1.config.commercetools) {
+            data = yield (0, cart_service_2.commerceGetCartByIdService)(cartId, bearerToken);
+        }
+        else {
+            data = yield (0, cart_service_1.getCartsByIdService)(cartId);
+        }
         if (!data.message) {
             res.json(data);
         }
@@ -146,11 +164,21 @@ const cartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.cartLineItem = cartLineItem;
-const createOffer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const commerceCartLineItem = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cartId = req.params.id;
-        const data = yield (0, cart_service_1.createOfferService)(cartId);
-        res.json(data);
+        const actionPayload = req.body;
+        const bearerToken = (0, getToken_1.getToken)(req);
+        const data = yield (0, cart_service_2.commerceCartLineItemService)(cartId.toString(), actionPayload, bearerToken);
+        if (!data.message) {
+            res.json(data);
+        }
+        else {
+            console.error(data.message);
+            res.json({
+                message: 'There was an unexpected error',
+            });
+        }
     }
     catch (error) {
         res.status(500).json({
@@ -158,7 +186,7 @@ const createOffer = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
 });
-exports.createOffer = createOffer;
+exports.commerceCartLineItem = commerceCartLineItem;
 const addCartLineItem = (cartId, variantId, quantity) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const cartItems = {

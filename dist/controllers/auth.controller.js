@@ -11,10 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const auth_service_1 = require("../services/magento/auth.service");
+const config_1 = require("../config/config");
+const auth_service_2 = require("../services/commercetools/auth.service");
+const bffTool = process.env.BFF_TOOL;
 const auth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
-        const data = yield (0, auth_service_1.authService)(username, password);
+        let data = null;
+        if (bffTool === config_1.config.commercetools) {
+            data = yield (0, auth_service_2.commerceAuthService)();
+        }
+        else {
+            data = yield (0, auth_service_1.authService)(username, password);
+        }
         res.json({
             ok: true,
             data,

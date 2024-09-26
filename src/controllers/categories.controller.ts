@@ -17,6 +17,8 @@ export const getCategories = async (req: Request, res: Response) => {
       data = await getCategoriesService(bearerToken);
     }
 
+    console.log(data);
+
     if (!data.message) {
       res.json({ ...data });
     } else {

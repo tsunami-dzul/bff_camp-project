@@ -74,3 +74,13 @@ export const shippingAddressService = async (cartId: string, addressInformation:
     throw error;
   }
 };
+
+export const createOrderService = async (cartId: string): Promise<number> => {
+  try {
+    const data = await api.put<number>(`guest-carts/${cartId}/order`);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
