@@ -1,6 +1,6 @@
-import api from '../api/API';
-import { ProductsResponse } from '../models/product.model';
-import { generateProductsByCategoryIdUrl, generateProductsBySKUUrl } from '../utils/generateProductsByCategoryIdUrl';
+import api from '../../api/API';
+import { ProductsResponse } from '../../models/product.model';
+import { generateProductsByCategoryIdUrl, generateProductsBySKUUrl } from '../../utils/generateProductsByCategoryIdUrl';
 
 export const getProductsByCategoryService = async (
   categoryId: string,

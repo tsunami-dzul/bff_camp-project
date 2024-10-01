@@ -1,5 +1,5 @@
-import api from '../api/API';
-import { CategoryResponse } from '../models/category.model';
+import api from '../../api/API';
+import { CategoryResponse } from '../../models/category.model';
 
 export const getCategoriesService = async (bearerToken: string): Promise<CategoryResponse> => {
   try {

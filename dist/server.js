@@ -16,9 +16,11 @@ const agent = new undici_1.Agent({
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use('/api/auth', require('./routers/auth.router'));
-app.use('/api/products', require('./routers/products.router'));
-app.use('/api/categories', require('./routers/categories.router'));
+app.use('/auth', require('./routes/auth.routes'));
+app.use('/carts', require('./routes/cart.routes'));
+app.use('/orders', require('./routes/order.routes'));
+app.use('/products', require('./routes/products.routes'));
+app.use('/categories', require('./routes/categories.routes'));
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });

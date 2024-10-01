@@ -46,3 +46,69 @@ export interface ProductsResponse {
   offset: number;
   message?: string;
 }
+
+export interface IContentstackProductPromoImage {
+  title: string;
+  href: string;
+}
+
+export interface IContentstackProductPromoMetadata {
+  uid: string;
+}
+
+export interface IContentstackProductPromoImages {
+  promo_images: IContentstackProductPromoImage;
+  _metadata: IContentstackProductPromoMetadata;
+}
+
+export interface IContentstackProductPromoSection {
+  promo_images: IContentstackProductPromoImages;
+}
+
+export interface IContentstackProductSEO {
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+}
+
+export interface IContentstackProductPublishDetails {
+  time: string;
+  user: string;
+  environment: string;
+  locale: string;
+}
+
+export interface IContentstackProductEntries {
+  uid: string;
+  _version: number;
+  _in_progress: boolean;
+  locale: string;
+  ACL: {};
+  categories: string | null;
+  commercetools_id: string;
+  created_at: string;
+  created_by: string;
+  description: string;
+  featured_image: string | null;
+  price: number | null;
+  promo_section: IContentstackProductPromoSection[];
+  seo: IContentstackProductSEO;
+  tags: [];
+  title: string;
+  updated_at: string;
+  updated_by: string;
+  url: string;
+  publish_details: IContentstackProductPublishDetails;
+}
+
+export interface IContentstackProduct {
+  entries: IContentstackProductEntries[];
+}
+
+export interface IContentstackProductResponse {
+  sku: string;
+  promos: {
+    text: string;
+    order: number;
+  }[];
+}

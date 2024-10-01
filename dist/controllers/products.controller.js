@@ -9,64 +9,74 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = void 0;
-const product_service_1 = require("../services/product.service");
+exports.getProductEntries = exports.getProducts = void 0;
+const product_service_1 = require("../services/magento/product.service");
 const getToken_1 = require("../utils/getToken");
+const config_1 = require("../config/config");
+const product_service_2 = require("../services/commercetools/product.service");
+const product_service_3 = require("../services/contentstack/product.service");
+const bffTool = process.env.BFF_TOOL;
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c, _d;
     try {
         const categoryId = (_a = req.query.categoryId) !== null && _a !== void 0 ? _a : '';
         const sku = (_b = req.query.sku) !== null && _b !== void 0 ? _b : '';
+        const page = (_c = req.query.page) !== null && _c !== void 0 ? _c : 10;
+        const offset = (_d = req.query.offset) !== null && _d !== void 0 ? _d : 0;
+        const bearerToken = (0, getToken_1.getToken)(req);
+        let data = null;
         if (categoryId) {
-            getProductsByCategory(req, res);
+            data = yield getProductsByCategory(categoryId.toString(), +page, +offset, bearerToken);
         }
         else if (sku) {
-            getProductBySku(req, res);
+            data = yield getProductBySku(req, res);
         }
         else {
-            res.json({
-                message: 'There is no match for the provided path',
+            return res.json({
+                message: 'Request does not match any route.',
             });
         }
-    }
-    catch (error) {
-        res.status(500).json({
-            ok: false,
-            message: error,
-        });
-    }
-});
-exports.getProducts = getProducts;
-const getProductsByCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
-    try {
-        const categoryId = (_a = req.query.categoryId) !== null && _a !== void 0 ? _a : '';
-        const page = (_b = req.query.page) !== null && _b !== void 0 ? _b : 10;
-        const offset = (_c = req.query.offset) !== null && _c !== void 0 ? _c : 0;
-        const bearerToken = (0, getToken_1.getToken)(req);
-        if (!categoryId) {
-            return res.status(400).json({
-                ok: false,
-                message: 'The categoryId query value must be provided',
-            });
-        }
-        const data = yield (0, product_service_1.getProductsByCategoryService)(categoryId.toString(), +offset, +page, bearerToken);
         if (!data.message) {
-            res.json(Object.assign({}, data));
+            return res.json(Object.assign({}, data));
         }
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
+    }
+});
+exports.getProducts = getProducts;
+const getProductEntries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log('Entries');
+        const data = yield (0, product_service_3.IContentStackProductService)();
+        res.json(Object.assign({}, data));
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.getProductEntries = getProductEntries;
+const getProductsByCategory = (categoryId, page, offset, bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (bffTool === config_1.config.commercetools) {
+            return yield (0, product_service_2.commerceGetProductsByCategoryService)(categoryId, bearerToken);
+        }
+        else {
+            return yield (0, product_service_1.getProductsByCategoryService)(categoryId.toString(), offset, page, bearerToken);
+        }
+    }
+    catch (error) {
+        throw error;
     }
 });
 const getProductBySku = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,8 +86,7 @@ const getProductBySku = (req, res) => __awaiter(void 0, void 0, void 0, function
         const bearerToken = (0, getToken_1.getToken)(req);
         if (!sku) {
             return res.status(400).json({
-                ok: false,
-                message: 'The categoryId query value must be provided',
+                message: 'The sku query value must be provided',
             });
         }
         const data = yield (0, product_service_1.getProductBySKUService)(sku.toString(), bearerToken);
@@ -87,14 +96,12 @@ const getProductBySku = (req, res) => __awaiter(void 0, void 0, void 0, function
         else {
             console.error(data.message);
             res.json({
-                ok: true,
                 message: 'There was an unexpected error',
             });
         }
     }
     catch (error) {
         res.status(500).json({
-            ok: false,
             message: error,
         });
     }
