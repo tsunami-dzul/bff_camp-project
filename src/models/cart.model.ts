@@ -108,3 +108,23 @@ export const CartItemActions = {
   RemoveLineItem: 'RemoveLineItem',
   SetShippingAddress: 'SetShippingAddress',
 };
+
+export const CommerceCartItemActions = {
+  AddLineItem: 'addLineItem',
+  ChangeLineItemQuantity: 'changeLineItemQuantity',
+  RemoveLineItem: 'removeLineItem',
+  SetShippingAddress: 'setShippingAddress',
+};
+
+export interface ICommerceActionAddLineItem {
+  action: string;
+  productId?: { 'product-id': string };
+  variantId?: { variantId: number };
+  lineItemId?: { lineItemId: string };
+  quantity?: number;
+}
+
+export interface ICommerceCarts {
+  version: { 'cart-version': string };
+  actions: ICommerceActionAddLineItem[];
+}

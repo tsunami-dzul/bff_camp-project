@@ -30,7 +30,7 @@ class API {
     }
   }
 
-  async post<T>(path: string, payload?: any, bearerToken?: string): Promise<T> {
+  async post<T, P>(path: string, payload?: P, bearerToken?: string): Promise<T> {
     try {
       if (path.indexOf('@') >= 0) {
         this.url = path;
@@ -54,7 +54,7 @@ class API {
     }
   }
 
-  async put<T>(path: string, payload?: any, bearerToken?: string): Promise<T> {
+  async put<T, P>(path: string, payload?: P, bearerToken?: string): Promise<T> {
     try {
       const response = await fetch(`${this.url}/${path}`, {
         method: 'PUT',

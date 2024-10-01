@@ -8,7 +8,14 @@ import {
   removeCartLineItemService,
   shippingAddressService,
 } from '../services/magento/cart.service';
-import { CartItemActions, ICart, ICartItem, IShippingPayload } from '../models/cart.model';
+import {
+  CartItemActions,
+  CommerceCartItemActions,
+  ICart,
+  ICartItem,
+  ICommerceCarts,
+  IShippingPayload,
+} from '../models/cart.model';
 import { config } from '../config/config';
 import {
   commerceCartLineItemService,
@@ -175,7 +182,7 @@ export const cartLineItem = async (req: Request, res: Response) => {
 export const commerceCartLineItem = async (req: Request, res: Response) => {
   try {
     const cartId = req.params.id;
-    const actionPayload = req.body;
+    const actionPayload: ICommerceCarts = req.body;
     const bearerToken = getToken(req);
 
     const data = await commerceCartLineItemService(cartId.toString(), actionPayload, bearerToken);
