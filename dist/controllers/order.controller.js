@@ -9,32 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategories = void 0;
-const categories_service_1 = require("../services/magento/categories.service");
-const categorie_service_1 = require("../services/commercetools/categorie.service");
+exports.commerceCreateOrder = exports.createOrder = void 0;
 const getToken_1 = require("../utils/getToken");
-const config_1 = require("../config/config");
-const bffTool = process.env.BFF_TOOL;
-const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const cart_service_1 = require("../services/magento/cart.service");
+const order_service_1 = require("../services/commercetools/order.service");
+const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bearerToken = (0, getToken_1.getToken)(req);
-        let data = null;
-        if (bffTool === config_1.config.commercetools) {
-            data = yield (0, categorie_service_1.commerceGetCategoriesService)(bearerToken);
-        }
-        else {
-            data = yield (0, categories_service_1.getCategoriesService)(bearerToken);
-        }
-        console.log(data);
-        if (!data.message) {
-            res.json(Object.assign({}, data));
-        }
-        else {
-            console.error(data.message);
-            res.json({
-                message: 'There was an unexpected error',
-            });
-        }
+        const cartId = req.params.id;
+        const data = yield (0, cart_service_1.createOrderService)(cartId);
+        res.json(data);
     }
     catch (error) {
         res.status(500).json({
@@ -42,4 +25,18 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
-exports.getCategories = getCategories;
+exports.createOrder = createOrder;
+const commerceCreateOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bearerToken = (0, getToken_1.getToken)(req);
+        const orderPayload = req.body;
+        const data = yield (0, order_service_1.commerceCreateOrderService)(orderPayload, bearerToken);
+        res.json(data);
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.commerceCreateOrder = commerceCreateOrder;

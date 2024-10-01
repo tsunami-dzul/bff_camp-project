@@ -8,18 +8,31 @@ import {
   removeCartLineItemService,
   shippingAddressService,
 } from '../services/magento/cart.service';
-import { CartItemActions, ICart, ICartItem, IShippingPayload } from '../models/cart.model';
+import {
+  CartItemActions,
+  CommerceCartItemActions,
+  ICart,
+  ICartItem,
+  ICommerceCarts,
+  IShippingPayload,
+} from '../models/cart.model';
 import { config } from '../config/config';
-import { commerceCreateCartService, commerceGetCartByIdService } from '../services/commercetools/cart.service';
+import {
+  commerceCartLineItemService,
+  commerceCreateCartService,
+  commerceGetCartByIdService,
+} from '../services/commercetools/cart.service';
+import { getToken } from '../utils/getToken';
 
 const bffTool = process.env.BFF_TOOL;
 
 export const createGuestCart = async (req: Request, res: Response) => {
   try {
     let data: any = null;
+    const bearerToken = getToken(req);
 
     if (bffTool === config.commercetools) {
-      data = await commerceCreateCartService();
+      data = await commerceCreateCartService(bearerToken);
     } else {
       data = await createGuestCartService();
     }
@@ -42,11 +55,12 @@ export const createGuestCart = async (req: Request, res: Response) => {
 
 export const getCartById = async (req: Request, res: Response) => {
   try {
+    const bearerToken = getToken(req);
     const cartId = req.params.id;
     let data: any = null;
 
     if (bffTool === config.commercetools) {
-      data = await commerceGetCartByIdService(cartId);
+      data = await commerceGetCartByIdService(cartId, bearerToken);
     } else {
       data = await getCartsByIdService(cartId);
     }
@@ -154,6 +168,30 @@ export const cartLineItem = async (req: Request, res: Response) => {
     if (response && !response.message) {
       res.json(response);
     } else {
+      res.json({
+        message: 'There was an unexpected error',
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error,
+    });
+  }
+};
+
+export const commerceCartLineItem = async (req: Request, res: Response) => {
+  try {
+    const cartId = req.params.id;
+    const actionPayload: ICommerceCarts = req.body;
+    const bearerToken = getToken(req);
+
+    const data = await commerceCartLineItemService(cartId.toString(), actionPayload, bearerToken);
+
+    if (!data.message) {
+      res.json(data);
+    } else {
+      console.error(data.message);
+
       res.json({
         message: 'There was an unexpected error',
       });

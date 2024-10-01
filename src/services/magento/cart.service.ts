@@ -3,7 +3,7 @@ import { ICart, ICartItem, IShippingPayload } from '../../models/cart.model';
 
 export const createGuestCartService = async (): Promise<ICart> => {
   try {
-    const data = await api.post<ICart>('guest-carts');
+    const data = await api.post<ICart, undefined>('guest-carts');
 
     return data;
   } catch (error) {
@@ -33,7 +33,7 @@ export const getCartsByIdItemsService = async (cartId: string): Promise<ICart> =
 
 export const addCartLineItemService = async (cartId: string, cartItems: ICartItem): Promise<ICart> => {
   try {
-    const data = await api.post<ICart>(`guest-carts/${cartId}/items`, cartItems);
+    const data = await api.post<ICart, ICartItem>(`guest-carts/${cartId}/items`, cartItems);
 
     return data;
   } catch (error) {
@@ -47,7 +47,7 @@ export const changeCartLineItemService = async (
   cartItems: ICartItem
 ): Promise<ICart> => {
   try {
-    const data = await api.put<ICart>(`guest-carts/${cartId}/items/${itemId}`, cartItems);
+    const data = await api.put<ICart, ICartItem>(`guest-carts/${cartId}/items/${itemId}`, cartItems);
 
     return data;
   } catch (error) {
@@ -68,6 +68,16 @@ export const removeCartLineItemService = async (cartId: string, itemId: number):
 export const shippingAddressService = async (cartId: string, addressInformation: IShippingPayload) => {
   try {
     const data = await api.post(`guest-carts/${cartId}/shipping-information`, addressInformation);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createOrderService = async (cartId: string): Promise<number> => {
+  try {
+    const data = await api.put<number, undefined>(`guest-carts/${cartId}/order`);
 
     return data;
   } catch (error) {

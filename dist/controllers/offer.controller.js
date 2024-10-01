@@ -9,32 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCategories = void 0;
-const categories_service_1 = require("../services/magento/categories.service");
-const categorie_service_1 = require("../services/commercetools/categorie.service");
-const getToken_1 = require("../utils/getToken");
+exports.createOffer = void 0;
 const config_1 = require("../config/config");
+const offer_service_1 = require("../services/commercetools/offer.service");
+const cart_service_1 = require("../services/magento/cart.service");
 const bffTool = process.env.BFF_TOOL;
-const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createOffer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bearerToken = (0, getToken_1.getToken)(req);
+        const cartId = req.params.id;
         let data = null;
         if (bffTool === config_1.config.commercetools) {
-            data = yield (0, categorie_service_1.commerceGetCategoriesService)(bearerToken);
+            const offer = req.body;
+            data = yield (0, offer_service_1.commerceCreateOffer)(offer);
         }
         else {
-            data = yield (0, categories_service_1.getCategoriesService)(bearerToken);
+            data = yield (0, cart_service_1.createOfferService)(cartId);
         }
-        console.log(data);
-        if (!data.message) {
-            res.json(Object.assign({}, data));
-        }
-        else {
-            console.error(data.message);
-            res.json({
-                message: 'There was an unexpected error',
-            });
-        }
+        res.json(data);
     }
     catch (error) {
         res.status(500).json({
@@ -42,4 +33,4 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
 });
-exports.getCategories = getCategories;
+exports.createOffer = createOffer;

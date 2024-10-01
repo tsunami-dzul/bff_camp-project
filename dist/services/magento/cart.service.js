@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createOfferService = exports.shippingAddressService = exports.removeCartLineItemService = exports.changeCartLineItemService = exports.addCartLineItemService = exports.getCartsByIdItemsService = exports.getCartsByIdService = exports.createGuestCartService = void 0;
+exports.createOrderService = exports.shippingAddressService = exports.removeCartLineItemService = exports.changeCartLineItemService = exports.addCartLineItemService = exports.getCartsByIdItemsService = exports.getCartsByIdService = exports.createGuestCartService = void 0;
 const API_1 = __importDefault(require("../../api/API"));
 const createGuestCartService = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -84,7 +84,7 @@ const shippingAddressService = (cartId, addressInformation) => __awaiter(void 0,
     }
 });
 exports.shippingAddressService = shippingAddressService;
-const createOfferService = (cartId) => __awaiter(void 0, void 0, void 0, function* () {
+const createOrderService = (cartId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield API_1.default.put(`guest-carts/${cartId}/order`);
         return data;
@@ -93,4 +93,4 @@ const createOfferService = (cartId) => __awaiter(void 0, void 0, void 0, functio
         throw error;
     }
 });
-exports.createOfferService = createOfferService;
+exports.createOrderService = createOrderService;
