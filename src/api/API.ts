@@ -6,10 +6,12 @@ class API {
 
     if (bffTool === 'magento') {
       this.url = process.env.MAGENTO_API;
-    } else {
+    } else if (bffTool === 'commercetools') {
       const partialUrl = process.env.CTP_API_URL?.replace('region', process.env.CTP_REGION ?? '');
 
       this.url = `${partialUrl}/${process.env.CTP_PROJECT_KEY}`;
+    } else {
+      this.url = process.env.CS_BASE_URL;
     }
   }
 

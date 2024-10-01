@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = void 0;
+exports.getProductEntries = exports.getProducts = void 0;
 const product_service_1 = require("../services/magento/product.service");
 const getToken_1 = require("../utils/getToken");
 const config_1 = require("../config/config");
 const product_service_2 = require("../services/commercetools/product.service");
+const product_service_3 = require("../services/contentstack/product.service");
 const bffTool = process.env.BFF_TOOL;
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
@@ -31,12 +32,12 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             data = yield getProductBySku(req, res);
         }
         else {
-            res.json({
+            return res.json({
                 message: 'Request does not match any route.',
             });
         }
         if (!data.message) {
-            res.json(Object.assign({}, data));
+            return res.json(Object.assign({}, data));
         }
         else {
             console.error(data.message);
@@ -52,6 +53,19 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getProducts = getProducts;
+const getProductEntries = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log('Entries');
+        const data = yield (0, product_service_3.IContentStackProductService)();
+        res.json(Object.assign({}, data));
+    }
+    catch (error) {
+        res.status(500).json({
+            message: error,
+        });
+    }
+});
+exports.getProductEntries = getProductEntries;
 const getProductsByCategory = (categoryId, page, offset, bearerToken) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (bffTool === config_1.config.commercetools) {
@@ -72,7 +86,7 @@ const getProductBySku = (req, res) => __awaiter(void 0, void 0, void 0, function
         const bearerToken = (0, getToken_1.getToken)(req);
         if (!sku) {
             return res.status(400).json({
-                message: 'The categoryId query value must be provided',
+                message: 'The sku query value must be provided',
             });
         }
         const data = yield (0, product_service_1.getProductBySKUService)(sku.toString(), bearerToken);
