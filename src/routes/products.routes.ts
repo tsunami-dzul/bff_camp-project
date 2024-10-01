@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { getProducts } from '../controllers/products.controller';
+import { getProductEntries, getProducts } from '../controllers/products.controller';
 
 const router = Router();
 
 router.get('/', getProducts);
+
+router.get('/:sku', getProductEntries);
 
 module.exports = router;

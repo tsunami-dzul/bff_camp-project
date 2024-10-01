@@ -17,14 +17,18 @@ class API {
         if (bffTool === 'magento') {
             this.url = process.env.MAGENTO_API;
         }
-        else {
+        else if (bffTool === 'commercetools') {
             const partialUrl = (_a = process.env.CTP_API_URL) === null || _a === void 0 ? void 0 : _a.replace('region', (_b = process.env.CTP_REGION) !== null && _b !== void 0 ? _b : '');
             this.url = `${partialUrl}/${process.env.CTP_PROJECT_KEY}`;
+        }
+        else {
+            this.url = process.env.CS_BASE_URL;
         }
     }
     get(path, bearerToken) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(`${this.url}/${path}`);
                 const response = yield fetch(`${this.url}/${path}`, {
                     method: 'GET',
                     headers: {
